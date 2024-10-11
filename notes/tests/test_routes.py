@@ -1,15 +1,12 @@
 from http import HTTPStatus
-import unittest
 
-# Импортируем функцию для определения модели пользователя.
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
 
-# Импортируем класс комментария.
 from notes.models import Note
 
-# Получаем модель пользователя.
+
 User = get_user_model()
 
 
@@ -19,17 +16,16 @@ class TestRoutes(TestCase):
     def setUpTestData(cls):
         cls.author = User.objects.create(username='Иван')
         cls.reader = User.objects.create(username='Максим')
+        cls.author_client = Client()
+        cls.author_client.force_login(cls.author)
+        cls.reader_client = Client()
+        cls.reader_client.force_login(cls.reader)
 
         cls.note = Note.objects.create(
             title='Заголовок',
             text='Текст', 
             author=cls.author
         )
-
-        cls.author_client = Client()
-        cls.author_client.force_login(cls.author)
-        cls.reader_client = Client()
-        cls.reader_client.force_login(cls.reader)
 
 
     def test_pages_availability(self):
